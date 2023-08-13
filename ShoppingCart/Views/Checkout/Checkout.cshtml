@@ -1,7 +1,40 @@
-﻿@model ShoppingCart.ViewModels.OrderViewModel>
+﻿@model ShoppingCart.ViewModels.OrderViewModel >
 @{
     ViewBag.Title = "Check Out";
 }
 
 <h2>Check Out</h2>
+<table class="table-condensed" style="width: 100%">
+    @if (Model != null)
+    {
+        <tr>
+            <td style="border-style:solid">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Order Id :
+                        @Model.Item1.OrderId
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Order Date :
+                        @Model.Item1.OrderDate
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Order Number :
+                        @Model.Item1.OrderNumber
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Total :$
+                        @Model.Item1.Total.ToString("#,##0.00")
+                    </div>
+                </div>                
+            </td>
+        </tr>
+    }
+</table>
 

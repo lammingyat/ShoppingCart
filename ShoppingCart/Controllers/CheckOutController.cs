@@ -8,7 +8,7 @@ using ShoppingCart.ViewModels;
 
 namespace ShoppingCart.Controllers
 {
-    public class ChectOutController : Controller
+    public class CheckOutController : Controller
     {
         ViewModelLibrary vml = new ViewModelLibrary();
        
