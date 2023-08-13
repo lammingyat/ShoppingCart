@@ -1,0 +1,31 @@
+DropDownList of Category   
+
+                 -@Html.DropDownListFor(model => model.Item2.CategoryId, new SelectList(Model.Item2.CategorySelectListItem, "Value", "Text"),
+    new { @class = "form-control", @id = "ddlCategory", @onchange = "CategorySelect(this.value)" })
+
+ @Html.TextBoxFor(model => model.ItemCode, new { @class = "form-control", autocomplete = "Off" })
+
+  @Html.TextBoxFor(model => model.ItemPrice, new { @class = "form-control", autocomplete = "Off" })
+
+var itemId = $(item).attr("itemid");
+        var formData = new FormData();
+        formData.append("ItemId", itemId);
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Shopping/Index',
+            success: function (data) {
+                if (data.Success) {
+                    //update the number of items in the cart
+                    $("#cartItem").text("Cart(" + data.Counter + ")");
+                }
+            },
+            error: function () {
+                alert("There is some problem. Please contact the developer.");
+            }
+        });
+                

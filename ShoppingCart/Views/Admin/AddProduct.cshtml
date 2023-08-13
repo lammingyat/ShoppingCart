@@ -1,0 +1,223 @@
+﻿@model Tuple<ShoppingCart.ViewModels.ProductViewModel, IEnumerable<ShoppingCart.ViewModels.ShoppingViewModel>, IEnumerable<ShoppingCart.ViewModels.CategoryViewModel>>
+
+@{
+    ViewBag.Title = "Add Product";
+}
+
+<h2>Product Manage</h2>
+
+<!--Add New Product-->
+<script type="text/javascript">
+    function ResetProduct() {
+        $("#CategoryId").val("1");
+        $("#ProductCode").val("");
+        $("#ProductName").val("");
+        $("#Description").val("");
+        $("#ProductPrice").val("0");
+        $("#ImagePath2").val("");
+        document.getElementById("Valid").checked = true;
+    }
+
+    function AddProduct() {
+        var formData = new FormData();
+        formData.append("CategoryId", $("#CategoryId").val());
+        formData.append("ProductCode", $("#ProductCode").val());
+        formData.append("ProductName", $("#ProductName").val());
+        formData.append("Description", $("#Description").val());
+        formData.append("ProductPrice", $("#ProductPrice").val());
+        formData.append("ImagePath2", $("#ImagePath2").get(0).files[0]);
+        formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
+
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Admin/AddProduct',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    location.reload();
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Product, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <h2 class="text-center">Add New Product</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        <div class="col-md-4">
+            <div class="form-group">
+                Category :
+                @Html.DropDownListFor(model => model.Item1.CategoryId, new SelectList(Model.Item1.CategorySelectListItem, "Value", "Text"),
+     new { @class = "form-control", @id = "CategoryId" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                Product Code :
+                @Html.TextBoxFor(model => model.Item1.ProductCode, new { @class = "form-control", autocomplete = "Off", @id = "ProductCode" })
+                @Html.ValidationMessageFor(model => model.Item1.ProductCode, "Product Code can't exceed 20 words", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                Product Name :
+                @Html.TextBoxFor(model => model.Item1.ProductName, new { @class = "form-control", autocomplete = "Off", @id = "ProductName" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                Description :
+                @Html.TextBoxFor(model => model.Item1.Description, new { @class = "form-control", autocomplete = "Off", @id = "Description" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                Product Price :
+                @Html.TextBoxFor(model => model.Item1.ProductPrice, new { @class = "form-control", autocomplete = "Off", @id = "ProductPrice" })
+                @Html.ValidationMessageFor(model => model.Item1.ProductPrice, "The range must between 0 and 99999", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                Image Path :
+                @Html.TextBoxFor(model => model.Item1.ImagePath, new { type = "file", @class = "form-control", @id = "ImagePath2" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                Valid :
+                @Html.CheckBoxFor(model => model.Item1.Valid, new { @class = "form-control", autocomplete = "Off", @id = "Valid" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" value="Add" class="btn btn-primary"  onclick="AddProduct();" />
+                &nbsp;
+                <input type="button" value="Reset" class="btn btn-danger"  onclick="ResetProduct();" />
+            </div>
+        </div>
+    </div>
+}
+
+<!--Cateogry Filter and Product List for Edit/Valid-->
+<script type="text/javascript">
+    function ValidProduct(Product) {
+        var ProductId = $(Product).attr("ProductId");
+        var ProductCode = $(Product).attr("ProductCode");
+        var Valid = $(Product).attr("Valid");
+        var formData = new FormData();
+        formData.append("ProductId", ProductId);
+        formData.append("ProductCode", ProductCode);
+        formData.append("Valid", Valid);
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Admin/ValidProduct',
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    location.reload();
+                }
+            },
+            error: function () {
+                alert("There is some problem. Please contact the developer.");
+            }
+        });
+    }
+
+    function EditProduct(Productid) {
+        window.location = location.protocol + '//' + location.host + "/Admin/EditProduct?pid=" + Productid;
+    }
+</script>
+
+<div class="container">
+    <h2 class="text-center">Product List</h2>
+    <table>
+        <tr>
+            <td align="left" valign="top" width="200px">
+                <div>
+                    <h2>Category :</h2>
+
+                    @if (true)
+                    {
+                        string path = HttpContext.Current.Request.Url.AbsoluteUri;
+                        var uri = new Uri(path);
+                        string strLeft = uri.GetLeftPart(UriPartial.Path);
+                        <a href="@strLeft"><h3>All</h3></a>
+                    }
+
+                    @foreach (var Product in Model.Item3)
+                    {
+                        string path = HttpContext.Current.Request.Url.AbsoluteUri;
+                        var uri = new Uri(path);
+                        string strLeft = uri.GetLeftPart(UriPartial.Path);
+                        <a href="@strLeft?cid=@Product.CategoryId"><h3>@Product.CategoryName</h3></a>
+                    }
+                </div>
+            </td>
+            <td valign="top">
+                @foreach (var Product in Model.Item2)
+                {
+                    <div class="col-md-4" style="border: 2px solid black; width:300px;">
+                        <div style="text-align: center; border-bottom: 2px solid maroon">
+                            <h3>@Product.ProductCode</h3>
+                            <h3>@Product.ProductName</h3>
+                        </div>
+                        <div>
+                            <div class="col-md-8">
+                                <img src="@Url.Content(@Product.ImagePath)" width="150px" height="150px" />
+                            </div>
+                            <div class="col-md-4" style="text-align: left; margin-bottom:10px;">
+                                <b>Category: @Product.CategoryName</b>
+                            </div>
+                            <div class="col-md-4" style="text-align: left">
+                                <b>Description: @Product.Description</b>
+                            </div>
+                        </div>
+                        <div class="col-md-8" style="font-size: 18px; border-top: 2px solid maroon; padding: 2px">
+                            <b>@Product.ProductPrice.ToString("#,##0.00 CAD")</b>
+                        </div>
+                        <div class="col-md-4" style="text-align: right; margin-bottom: 10px; border-top: 2px solid maroon; padding: 2px">
+                            <input type="button" name="EditProduct" value="Edit" class="btn btn-success" id="btnEditProduct" onclick="EditProduct('@Product.ProductId')" />
+
+                            @if (@Product.Valid)
+                            {
+                                <input type="button" name="InvalidProduct" value="Invalid it" class="btn btn-danger" ProductId="@Product.ProductId" ProductCode="@Product.ProductCode" valid=false id="btnInvalidProduct" onclick="ValidProduct(this)" />
+                            }
+                            else
+                            {
+                                <input type="button" name="ValidProduct" value="Valid it" class="btn btn-primary" ProductId="@Product.ProductId" ProductCode="@Product.ProductCode" valid=true id="btnValidProduct" onclick="ValidProduct(this)" />
+                            }
+                        </div>
+                    </div>
+                }
+            </td>
+        </tr>
+    </table>
+</div>

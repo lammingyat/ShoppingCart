@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ShoppingCart.ViewModels.OrderViewModel>
+
+@{
+    ViewBag.Title = "Order History";
+}
+
+<script type="text/javascript">
+    function OrderDetail(Order) {
+        window.location = "OrderDetail?oid=" + $(Order).attr("OrderId");
+    }
+</script>
+
+<h2>ShoppingCart</h2>
+<table class="table-condensed" style="width: 100%">
+    @if (Model != null)
+    {
+        foreach (var Order in Model)
+        {
+            <tr>
+                <td style="border-style:solid">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Order Id :
+                            @Order.OrderId
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Order Date :
+                            @Order.OrderDate
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Order Number :
+                            @Order.OrderNumber
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Total :$
+                            @Order.Total.ToString("#,##0.00")
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Paid :
+                            @Order.Paid
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Paid Date:
+                            @Order.PaidDate                           
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Valid :
+                            @Order.Valid
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Invalid Date:
+                            @Order.InvalidDate
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="button" value="Detail" class="btn btn-success" OrderId="@Order.OrderId" onclick="OrderDetail(this);" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+

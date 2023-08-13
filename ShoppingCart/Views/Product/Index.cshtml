@@ -1,0 +1,89 @@
+﻿@model Tuple<IEnumerable<ShoppingCart.ViewModels.ShoppingViewModel>, IEnumerable<ShoppingCart.ViewModels.CategoryViewModel>>
+
+@{
+    ViewBag.Title = "Product";
+}
+
+<h2>Shopping</h2>
+
+<!--Cateogry Filter and Item List for Shopping-->
+<script type="text/javascript">
+        function AddToCart(Product) {
+            var formData = new FormData();
+            formData.append("ProductId", $(Product).attr("ProductId"));
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Product/AddToCart',
+            success: function (data) {
+                    if (data.Success) {
+                    //update the number of items in the cart
+                    $("#CartProduct").text("Cart(" + data.Counter + ")");
+                    }
+                },
+            error: function () {
+                    alert("There is some problem. Please contact the developer.");
+                }
+            });
+    }
+</script>
+
+<div class="container">
+    <h2 class="text-center">Product List</h2>
+    <table>
+        <tr>
+            <td align="left" valign="top" width="200px">
+                <div>
+                    <h2>Category :</h2>
+
+                    @if (true)
+                    {
+                        string path = HttpContext.Current.Request.Url.AbsoluteUri;
+                        var uri = new Uri(path);
+                        string strLeft = uri.GetLeftPart(UriPartial.Path);
+                        <a href="@strLeft"><h3>All</h3></a>
+                    }
+
+                    @foreach (var product in Model.Item2)
+                    {
+                        string path = HttpContext.Current.Request.Url.AbsoluteUri;
+                        var uri = new Uri(path);
+                        string strLeft = uri.GetLeftPart(UriPartial.Path);
+                        <a href="@strLeft?cid=@product.CategoryId"><h3>@product.CategoryName</h3></a>
+                    }
+                </div>
+            </td>
+            <td valign="top">
+                @foreach (var product in Model.Item1)
+                {
+                    <div class="col-md-4" style="border: 2px solid black; width:300px">
+                        <div style="text-align: center; border-bottom: 2px solid maroon">
+                            <h3>@product.ProductName</h3>
+                        </div>
+                        <div>
+                            <div class="col-md-8">
+                                <img src="@Url.Content(product.ImagePath)" width="150px" height="150px" />
+                            </div>
+                            <div class="col-md-4" style="text-align: left; margin-bottom:10px;">
+                                <b>Category: @product.CategoryName</b>
+                            </div>
+                            <div class="col-md-4" style="text-align: left">
+                                <b>Description: @product.Description</b>
+                            </div>
+                        </div>
+                        <div class="col-md-8" style="font-size: 18px; border-top: 2px solid maroon; padding: 2px">
+                            <b>@product.ProductPrice.ToString("#,##0.00 CAD")</b>
+                        </div>
+                        <div class="col-md-4" style="text-align: right; margin-bottom: 10px; border-top: 2px solid maroon; padding: 2px">
+                            <input type="button" name="AddToCart" value="Add to Cart" class="btn btn-primary" ProductId="@product.ProductId" id="btnAddToCart" onclick="AddToCart(this)" />
+                        </div>
+                    </div>
+                }
+            </td>
+        </tr>
+    </table>
+</div>

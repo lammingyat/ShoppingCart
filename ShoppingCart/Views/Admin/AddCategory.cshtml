@@ -1,0 +1,101 @@
+﻿@model Tuple<ShoppingCart.ViewModels.CategoryViewModel, IEnumerable<ShoppingCart.ViewModels.CategoryViewModel>>
+@{
+    ViewBag.Title = "Add Category";
+}
+
+<h2>Category Manage</h2>
+
+<!--Add New Category-->
+<script type="text/javascript">
+    function ResetCategory() {
+        $("#CategoryName").val("");
+        document.getElementById("Valid").checked = true;
+    }
+
+    function AddCategory() {
+        var formData = new FormData();
+        formData.append("CategoryName", $("#CategoryName").val());
+        formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Admin/AddCategory',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    ResetCategory();
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Item, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <h2 class="text-center">Add New Category</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="col-md-4">
+            <div class="form-group">
+                Category Name :
+                @Html.TextBoxFor(model => model.Item1.CategoryName, new { @class = "form-control", autocomplete = "Off", @id = "CategoryName" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                Valid :
+                @Html.CheckBoxFor(model => model.Item1.Valid, new { @class = "form-control", autocomplete = "Off", @id = "Valid" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" value="Add" class="btn btn-primary" onclick="AddCategory();" />
+                &nbsp;
+                <input type="button" value="Reset" class="btn btn-danger" onclick="ResetCategory();" />
+            </div>
+        </div>
+    </div>
+}
+
+<!--Cateogry for Edit/Valid-->
+<script type="text/javascript"> 
+    function EditCategory(CategoryId) {
+        window.location = location.protocol + '//' + location.host + "/Admin/EditCategory?cid=" + CategoryId;
+    }
+</script>
+
+<div class="container">
+    <h2 class="text-center">Cateogry List</h2>
+
+    @foreach (var category in Model.Item2)
+    {
+<div class="col-md-4" style="border: 2px solid black; width:300px;">
+    <div style="text-align: center; border-bottom: 2px solid maroon">
+        <h3>ID: @category.CategoryId</h3>
+    </div>
+    <div>
+        <div class="col-md-4">
+            <b>Name: @category.CategoryName</b>
+        </div>
+        <div class="col-md-4">
+            <b>Valid: @category.Valid</b>
+        </div>
+        <div class="col-md-4">
+            <input type="button" value="Edit" class="btn btn-primary" id="btnEditCategory" onclick="EditCategory('@category.CategoryId');" />
+        </div>
+    </div>
+</div>
+    }
+
+</div>

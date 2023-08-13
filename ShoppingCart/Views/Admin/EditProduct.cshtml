@@ -1,0 +1,135 @@
+﻿@model  ShoppingCart.ViewModels.ProductViewModel
+@{
+    ViewBag.Title = "Edit Product";
+}
+
+<h2>Edit Product</h2>
+
+<!--Edit Product-->
+<script type="text/javascript">
+    function ResetProduct(Product) {
+        $("#CategoryId").val($(Product).attr("CategoryId"));
+        $("#ProductCode").val($(Product).attr("ProductCode"));
+        $("#ProductName").val($(Product).attr("ProductName"));
+        $("#Description").val($(Product).attr("Description"));
+        $("#ProductPrice").val($(Product).attr("ProductPrice"));
+        document.getElementById("Valid").checked = $(Product).attr("Valid");
+    }
+
+    function SaveProduct(Product) {
+        var formData = new FormData();
+        formData.append("ProductId", $(Product).attr("ProductId"));
+        formData.append("CategoryId", $("#CategoryId").val());
+        formData.append("ProductCode", $("#ProductCode").val());
+        formData.append("ProductName", $("#ProductName").val());
+        formData.append("Description", $("#Description").val());
+        formData.append("ProductPrice", $("#ProductPrice").val());
+        formData.append("ImagePath2", $("#ImagePath2").get(0).files[0]);
+        formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
+
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Admin/SaveProduct',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    location.reload();
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Product, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="container">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div>
+      <img id="ImagePath" src="@Url.Content(Model.ImagePath)" width="150px" height="150px" />
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Product Id :<br/>
+          @Model.ProductId
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Category :
+            @Html.DropDownListFor(model => model.CategoryId, new SelectList(Model.CategorySelectListItem, "Value", "Text"),
+ new { @class = "form-control", @id = "CategoryId" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Product Code :
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "form-control", autocomplete = "Off", @id = "ProductCode" })
+            @Html.ValidationMessageFor(model => model.ProductCode, "Product Code can't exceed 20 words", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Product Name :
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "form-control", autocomplete = "Off", @id = "ProductName" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Description :
+            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", autocomplete = "Off", @id = "Description" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Product Price :
+            @Html.TextBoxFor(model => model.ProductPrice, new { @class = "form-control", autocomplete = "Off", @id = "ProductPrice" })
+            @Html.ValidationMessageFor(model => model.ProductPrice, "The range must between 0 and 99999", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Image Path :
+            @Html.TextBoxFor(model => model.ImagePath, new { type = "file", @class = "form-control", @id = "ImagePath2" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Valid :
+            @Html.CheckBoxFor(model => model.Valid, new { @class = "form-control", autocomplete = "Off", @id = "Valid" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" value="Save" class="btn btn-primary"  ProductId="@Model.ProductId" onclick="SaveProduct(this)" />
+            &nbsp;
+            <input type="button" value="Reset" class="btn btn-danger"  CategoryId="@Model.CategoryId" ProductCode="@Model.ProductCode" ProductName="@Model.ProductName" Description="@Model.Description" ProductPrice="@Model.ProductPrice" Valid=@Model.Valid onclick="ResetProduct(this)" />
+        </div>
+    </div>
+</div>
+}
+

@@ -1,0 +1,157 @@
+﻿@model IEnumerable<ShoppingCart.ViewModels.ShoppingCartModel>
+
+@{
+    ViewBag.Title = "ShoppingCart";
+    decimal TotalAmount = 0.00M;
+}
+
+<script type="text/javascript">
+    function RemoveProduct(Product) {
+        var formData = new FormData();
+        formData.append("ProductId", $(Product).attr("ProductId"));
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/ShoppingCart/RemoveProduct',
+            success: function (data) {
+                if (data.Success) {
+                    //update the number of Products in the cart
+                    $("#CartProduct").text("Cart(" + data.Counter + ")");
+                    window.location = "ShoppingCart";
+                }
+            },
+            error: function () {
+                alert("There is some problem. Please contact the developer.");
+            }
+        });
+    }
+
+    function ChangeQuantity(Product) {
+        var formData = new FormData();
+        formData.append("ProductId", $(Product).attr("ProductId"));
+        formData.append("Num", $(Product).attr("Num"));
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/ShoppingCart/ChangeQuantity',
+            success: function (data) {
+                if (data.Success) {
+                    //update the number of Products in the cart
+                    $("#CartProduct").text("Cart(" + data.Counter + ")");
+                    window.location = "ShoppingCart";
+                }
+            },
+            error: function () {
+                alert("There is some problem. Please contact the developer.");
+            }
+        });
+    }
+
+    function CheckOut() {
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+
+            url: '/ShoppingCart/CheckOut',
+            success: function (data) {
+                if (data.Success) {
+                    //update the number of Products in the cart
+                    $("#CartProduct").text("Cart(" + data.Counter + ")");
+                    window.location = "Checkout/Checkout?oid=" + data.OrderId;
+                }
+            },
+            error: function () {
+                alert("There is some problem. Please contact the developer.");
+            }
+        });
+    }
+</script>
+
+<h2>Shopping Cart</h2>
+<table class="table-condensed" style="width: 100%">
+    @if (Model != null)
+    {
+        <tr>
+            <td align="center">
+                <u>Image</u>
+            </td>
+            <td align="center">
+                <u>Product Code</u>
+            </td>
+            <td align="center">
+                <u>Product Name</u>
+            </td>
+            <td align="center">
+                <u>Quantity(Max:99)</u>
+            </td>
+            <td align="center">
+                <u>Unit Price</u>
+            </td>
+            <td align="center">
+                <u>Sub Total</u>
+            </td>
+            <td>
+            </td>
+        </tr>
+        foreach (var Product in Model)
+        {
+            TotalAmount += Product.Total;
+            <tr>
+                <td>
+                    <img src="@Url.Content(Product.ImagePath)" height="50px" width="50px" class="img-rounded" />
+                </td>
+                <td>
+                    @Product.ProductCode
+                </td>
+                <td>
+                    @Product.ProductName
+                </td>
+                <td style="text-align: center">
+                    <input type="button" value="-" class="btn btn-danger" ProductId="@Product.ProductId" Num=-1  onclick="ChangeQuantity(this)" />
+                    <div style="border-style:solid; border-width:1px; display:inline;">　　@Product.Quantity.ToString("#,##0")　　</div>
+                    <input type="button" value="+" class="btn btn-primary" ProductId="@Product.ProductId" Num=1  onclick="ChangeQuantity(this)" />
+                </td>
+                <td style="text-align: right">
+                    $@Product.UnitPrice.ToString("#,##0.00")
+                </td>
+                <td style="text-align: right">
+                    $@Product.Total.ToString("#,##0.00")
+                </td>
+                <td style="text-align: right">
+                    <input type="button" value="Remove" class="btn btn-success" ProductId="@Product.ProductId" onclick="RemoveProduct(this)" />
+                </td>
+            </tr>
+        }
+    }
+    <tr style="border-top: 2px solid maroon">
+        <td colspan="4" style="text-align: right">
+            <h3>Total Amount</h3>
+        </td>
+        <td style="text-align: right">
+            <h3>$@TotalAmount.ToString("#,##0.00")</h3>
+        </td>
+    </tr>
+    <tr style="text-align: right">
+        <td colspan="6">
+            @if (Model != null && Model.Count() > 0)
+            {
+                <input type="submit" value="Check Out" name="CheckOut" class="btn btn-primary" id="btnCheckOut" onclick="CheckOut()" />
+            }
+        </td>
+    </tr>
+    <tr style="text-align: center">
+        <td colspan="5">
+            @Html.ActionLink("Back to Shopping", "Index", "Product")
+        </td>
+    </tr>
+</table>
+
+

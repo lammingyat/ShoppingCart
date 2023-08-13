@@ -1,0 +1,13 @@
+﻿<ul class="nav navbar-nav navbar-right">
+    <li>
+        @if (Session["CartCounter"] == null) //Show the number of items those already in cart(set a id for the link and change the text when click add to cart in shopping page)
+        {
+            @Html.ActionLink("Cart", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" })
+        }
+        else
+        {
+            @Html.ActionLink("Cart(" + Session["CartCounter"] + ")", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" })
+        }
+    </li>
+</ul>
+

@@ -1,0 +1,76 @@
+﻿@model  ShoppingCart.ViewModels.CategoryViewModel
+@{
+    ViewBag.Title = "Edit Category";
+}
+
+<h2>Edit Category</h2>
+
+<!--Edit Item-->
+<script type="text/javascript">
+    function ResetCategory(Category) {
+        $("#CategoryName").val($(Category).attr("CategoryName"));
+        document.getElementById("Valid").checked = $(Category).attr("Valid");
+    }
+
+    function SaveCategory(Category) {
+        var formData = new FormData();
+        formData.append("CategoryId", $(Category).attr("CategoryId"));
+        formData.append("CategoryName", $("#CategoryName").val());
+        formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
+
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Admin/SaveCategory',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    location.reload();
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Item, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="container">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-4">
+        <div class="form-group">
+            Id :@Model.CategoryId           
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Name :
+            @Html.TextBoxFor(model => model.CategoryName, new { @class = "form-control", autocomplete = "Off", @id = "CategoryName" })
+            @Html.ValidationMessageFor(model => model.CategoryName, "Category Name can't exceed 30 words", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Valid :
+            @Html.CheckBoxFor(model => model.Valid, new { @class = "form-control", autocomplete = "Off", @id = "Valid" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" value="Save" class="btn btn-primary" CategoryId="@Model.CategoryId" onclick="SaveCategory(this)" />
+            &nbsp;
+            <input type="button" value="Reset" class="btn btn-danger"  CategoryName="@Model.CategoryName" Valid=@Model.Valid onclick="ResetCategory(this)" />
+        </div>
+    </div>
+</div>
+}
