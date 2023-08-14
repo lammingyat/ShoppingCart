@@ -10,26 +10,29 @@
     }
 
     function CancelOrder(Order) {
-        var formData = new FormData();
-        formData.append("OrderId", $(Order).attr("OrderId"));
+        const response = confirm("Are you sure cancel the order(Id:" + $(Order).attr("OrderId") +")?");
+        if (response) {
+            var formData = new FormData();
+            formData.append("OrderId", $(Order).attr("OrderId"));
 
-        $.ajax({
-            async: true,
-            type: 'POST',
-            contentType: false,
-            processData: false,
-            data: formData,
-            url: '/Order/CancelOrder',
-            success: function (data) {
-                if (data.Success) {
-                    alert(data.Message);
-                    location.reload();
+            $.ajax({
+                async: true,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                url: '/Order/CancelOrder',
+                success: function (data) {
+                    if (data.Success) {
+                        alert(data.Message);
+                        location.reload();
+                    }
+                },
+                error: function () {
+                    alert("There is some problem. Please contact the developer.");
                 }
-            },
-            error: function () {
-                alert("There is some problem. Please contact the developer.");
-            }
-        });
+            });
+        }
     }
 </script>
 
@@ -87,7 +90,13 @@
                         @Model.Item1.InvalidDate
                     </div>
                 </div>
-                @if (Model.Item1.Valid)
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Delivery Address:
+                        @Model.Item1.FullAddress
+                    </div>
+                </div>
+                @if (Model.Item1.Valid && !Model.Item1.Paid)
                 {
                     <div class="col-md-4">
                         <div class="form-group">
@@ -96,7 +105,7 @@
                         </div>
                     </div>
                 }
-                </td>
+            </td>
         </tr>
 
     }
@@ -130,29 +139,34 @@
         </tr>
         foreach (var OrderDetail in Model.Item2)
         {
-            <tr>
-                <td>
-                    <img src="@Url.Content(OrderDetail.ImagePath)" height="50px" width="50px" class="img-rounded" />
-                </td>
-                <td>
-                    @OrderDetail.ProductCode
-                </td>
-                <td>
-                    @OrderDetail.ProductName
-                </td>
-                <td>
-                    @OrderDetail.Quantity
-                </td>
-                <td style="text-align: right">
-                    $@OrderDetail.UnitPrice.ToString("#,##0.00")
-                </td>
-                <td style="text-align: right">
-                    $@OrderDetail.Total.ToString("#,##0.00")
-                </td>
-                <td style="text-align: right">
-                    <input type="button"value="Cancel" class="btn btn-success"  onclick="CancelProduct(this)" />
-                </td>
-            </tr>
+<tr>
+    <td>
+        <img src="@Url.Content(OrderDetail.ImagePath)" height="50" width="50" class="img-rounded" />
+    </td>
+    <td>
+        @OrderDetail.ProductCode
+    </td>
+    <td>
+        @OrderDetail.ProductName
+    </td>
+    <td>
+        @OrderDetail.Quantity
+    </td>
+    <td style="text-align: right">
+        $@OrderDetail.UnitPrice.ToString("#,##0.00")
+    </td>
+    <td style="text-align: right">
+        $@OrderDetail.Total.ToString("#,##0.00")
+    </td>
+   
+    <td style="text-align: right">
+        @if (Model.Item1.Valid)
+        {
+            <input type="button" value="Cancel" class="btn btn-success" onclick="CancelProduct(this)" />
+        }
+        </td>
+    
+    </tr>
         }
     }
 </table>

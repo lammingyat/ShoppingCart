@@ -3,8 +3,6 @@
     ViewBag.Title = "Add Category";
 }
 
-<h2>Category Manage</h2>
-
 <!--Add New Category-->
 <script type="text/javascript">
     function ResetCategory() {
@@ -39,7 +37,7 @@
     }
 </script>
 
-
+<h2>Category Manage</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -92,7 +90,7 @@
             <b>Valid: @category.Valid</b>
         </div>
         <div class="col-md-4">
-            <input type="button" value="Edit" class="btn btn-primary" id="btnEditCategory" onclick="EditCategory('@category.CategoryId');" />
+            <input type="button" value="Edit" class="btn btn-primary"  onclick="EditCategory('@category.CategoryId');" />
         </div>
     </div>
 </div>

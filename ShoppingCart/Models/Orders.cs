@@ -23,5 +23,9 @@ namespace ShoppingCart.Models
         public Nullable<System.DateTime> PaidDate { get; set; }
         public bool Valid { get; set; }
         public Nullable<System.DateTime> InvalidDate { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string Province { get; set; }
+        public string PostalCode { get; set; }
     }
 }

@@ -1,40 +1,188 @@
-﻿@model ShoppingCart.ViewModels.OrderViewModel >
+﻿@model ShoppingCart.ViewModels.OrderViewModel
 @{
     ViewBag.Title = "Check Out";
 }
 
+<script type="text/javascript">
+    function ResetAddress() {
+        $("#Address").val("");
+        $("#City").val("");
+        $("#Province").val("");
+        $("#PostalCode").val("");
+    }
+
+    function ResetCard() {
+        $("#CardNo").val("");
+        $("#CardHolder").val("");
+        $("#Province").val("");
+        $("#CVV").val("");
+        $("#month").val("1");
+        $("#year").val("2023");
+    }
+
+    function Pay(Order) {
+        var formData = new FormData();
+        formData.append("OrderId", $(Order).attr("OrderId"));
+        formData.append("Address", $("#Address").val());
+        formData.append("City", $("#City").val());
+        formData.append("Province", $("#Province").val());
+        formData.append("PostalCode", $("#PostalCode").val());
+
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Checkout/Pay',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {                   
+                    window.location = "confirmation?oid=" + data.OrderId;
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Item, please contact the developer.");
+            }
+        });
+    }
+</script>
+
 <h2>Check Out</h2>
+@using (Html.BeginForm())
+{
+   
 <table class="table-condensed" style="width: 100%">
     @if (Model != null)
     {
         <tr>
             <td style="border-style:solid">
+                <h4>Order:</h4>
                 <div class="col-md-4">
                     <div class="form-group">
                         Order Id :
-                        @Model.Item1.OrderId
+                        @Model.OrderId
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Order Date :
-                        @Model.Item1.OrderDate
+                        @Model.OrderDate
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Order Number :
-                        @Model.Item1.OrderNumber
+                        @Model.OrderNumber
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Total :$
-                        @Model.Item1.Total.ToString("#,##0.00")
+                        @Model.Total.ToString("#,##0.00")
                     </div>
-                </div>                
+                </div>
+            </td>
+        </tr>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <tr>
+            <td style="border-style:solid">
+                <h4>Delivery Address:</h4>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Address :
+                        @Html.TextBoxFor(model => model.Address, new { @class = "form-control", autocomplete = "Off", @id = "Address" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        City :
+                        @Html.TextBoxFor(model => model.City, new { @class = "form-control", autocomplete = "Off", @id = "City" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Province :
+                        @Html.TextBoxFor(model => model.Province, new { @class = "form-control", autocomplete = "Off", @id = "Province" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        PostalCode :
+                        @Html.TextBoxFor(model => model.PostalCode, new { @class = "form-control", autocomplete = "Off", @id = "PostalCode", maxlength = 6 })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="button" value="Reset" class="btn btn-danger" onclick="ResetAddress();" />
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="border-style:solid">
+                <h4>Card:</h4>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Card No :
+                        @Html.TextBoxFor(model => model.CardNo, new { @class = "form-control", autocomplete = "Off", @id = "CardNo", maxlength = 16 })
+                        @Html.ValidationMessageFor(model => model.CardNo, "The Card No must be 16 digits", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Card Holder :
+                        @Html.TextBoxFor(model => model.CardHolder, new { @class = "form-control", autocomplete = "Off", @id = "CardHolder" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        CVV :
+                        @Html.TextBoxFor(model => model.CVV, new { @class = "form-control", autocomplete = "Off", @id = "CVV", maxlength = 3 })
+                        @Html.ValidationMessageFor(model => model.CVV, "The CVV must be 3 digits", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        Expire Date :<select id="month">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        /
+                        <select id="year">
+                            <option>2023</option>
+                            <option>2024</option>
+                            <option>2025</option>
+                            <option>2026</option>
+                            <option>2027</option>
+                            <option>2028</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="button" value="Reset" class="btn btn-danger" onclick="ResetCard();" />
+                        <input type="button" value="Pay" class="btn btn-primary" OrderId="@Model.OrderId.ToString()" onclick="Pay(this);" />
+                    </div>
+                </div>
             </td>
         </tr>
     }
 </table>
 
+}

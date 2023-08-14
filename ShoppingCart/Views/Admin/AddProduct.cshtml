@@ -191,7 +191,7 @@
                         </div>
                         <div>
                             <div class="col-md-8">
-                                <img src="@Url.Content(@Product.ImagePath)" width="150px" height="150px" />
+                                <img src="@Url.Content(@Product.ImagePath)" width="150" height="150" />
                             </div>
                             <div class="col-md-4" style="text-align: left; margin-bottom:10px;">
                                 <b>Category: @Product.CategoryName</b>
@@ -208,11 +208,11 @@
 
                             @if (@Product.Valid)
                             {
-                                <input type="button" name="InvalidProduct" value="Invalid it" class="btn btn-danger" ProductId="@Product.ProductId" ProductCode="@Product.ProductCode" valid=false id="btnInvalidProduct" onclick="ValidProduct(this)" />
+                                <input type="button" value="Invalid it" class="btn btn-danger" ProductId="@Product.ProductId" ProductCode="@Product.ProductCode" valid=false id="btnInvalidProduct" onclick="ValidProduct(this)" />
                             }
                             else
                             {
-                                <input type="button" name="ValidProduct" value="Valid it" class="btn btn-primary" ProductId="@Product.ProductId" ProductCode="@Product.ProductCode" valid=true id="btnValidProduct" onclick="ValidProduct(this)" />
+                                <input type="button" value="Valid it" class="btn btn-primary" ProductId="@Product.ProductId" ProductCode="@Product.ProductCode" valid=true id="btnValidProduct" onclick="ValidProduct(this)" />
                             }
                         </div>
                     </div>

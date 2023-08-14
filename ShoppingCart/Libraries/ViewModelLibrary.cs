@@ -156,6 +156,7 @@ namespace ShoppingCart.Libraries
                         PaidDate = (!string.IsNullOrEmpty(objOrd.PaidDate.ToString())) ? objOrd.PaidDate.ToString() : "-",
                         Valid = objOrd.Valid,
                         InvalidDate = (!string.IsNullOrEmpty(objOrd.InvalidDate.ToString())) ? objOrd.InvalidDate.ToString() : "-",
+                        FullAddress = objOrd.Paid ? objOrd.Address + "," + objOrd.City + "," + objOrd.Province + "," + objOrd.PostalCode : String.Empty
                     }
              ).ToList();
         }
@@ -171,10 +172,11 @@ namespace ShoppingCart.Libraries
                         OrderNumber = objOrd.OrderNumber,
                         UserID = objOrd.UserId,
                         Total = objOrd.Total,
-                        Paid = objOrd.Valid,
+                        Paid = objOrd.Paid,
                         PaidDate = (!string.IsNullOrEmpty(objOrd.PaidDate.ToString())) ? objOrd.PaidDate.ToString() : "-",
                         Valid = objOrd.Valid,
                         InvalidDate = (!string.IsNullOrEmpty(objOrd.InvalidDate.ToString())) ? objOrd.InvalidDate.ToString() : "-",
+                        FullAddress = objOrd.Paid ? objOrd.Address +"," + objOrd.City + "," +objOrd.Province + "," +objOrd.PostalCode:String.Empty
                     }
                ).ToList().FirstOrDefault();
         }
@@ -183,7 +185,7 @@ namespace ShoppingCart.Libraries
         {
             return (from objOrdDet in objShoppingCartDBEntities.OrderDetails 
                     join objProduct in objShoppingCartDBEntities.Products on objOrdDet.ProductId equals objProduct.ProductId.ToString()
-                    where objOrdDet.OrderId == intOrderId
+                    where objOrdDet.OrderId == intOrderId && objOrdDet.Valid==true
                     select new OrderDetailsViewsModel()
                     {
                         OrderDetailId = objOrdDet.OrderDetailId,

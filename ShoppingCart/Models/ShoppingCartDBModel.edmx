@@ -43,6 +43,10 @@
           <Property Name="PaidDate" Type="datetime" />
           <Property Name="Valid" Type="bit" Nullable="false" />
           <Property Name="InvalidDate" Type="datetime" />
+          <Property Name="Address" Type="nvarchar(max)" />
+          <Property Name="City" Type="nvarchar(max)" />
+          <Property Name="Province" Type="nvarchar(max)" />
+          <Property Name="PostalCode" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -132,6 +136,10 @@
           <Property Name="PaidDate" Type="DateTime" Precision="3" />
           <Property Name="Valid" Type="Boolean" Nullable="false" />
           <Property Name="InvalidDate" Type="DateTime" Precision="3" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Province" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -187,6 +195,10 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="ShoppingCartDBModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="InvalidDate" ColumnName="InvalidDate" />
                 <ScalarProperty Name="Valid" ColumnName="Valid" />
                 <ScalarProperty Name="PaidDate" ColumnName="PaidDate" />
