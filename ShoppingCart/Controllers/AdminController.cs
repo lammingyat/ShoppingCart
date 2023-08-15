@@ -14,7 +14,7 @@ namespace ShoppingCart.Controllers
     {
         ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
         ViewModelLibrary vml = new ViewModelLibrary();
-        PermissionsLibrary pl = new PermissionsLibrary();
+        
 
         public AdminController()
         {
@@ -25,15 +25,21 @@ namespace ShoppingCart.Controllers
         //The view for add new Product and choose Product to edit
         public ActionResult AddProduct()
         {
-            Session["UserId"] = "1";
-            string strCid = Request.Params["cid"];            
+            if (Session["UserId"] != null)
+            {
+                if (Session["Admin"].ToString().Equals("True"))
+                {
+                    string strCid = Request.Params["cid"];
+                    //model for  adding new Product
+                    ProductViewModel objProductViewModel = new ProductViewModel();
+                    objProductViewModel.CategorySelectListItem = vml.CategorySelectList();
+                    objProductViewModel.Valid = true;
 
-            //model for  adding new Product
-            ProductViewModel objProductViewModel = new ProductViewModel();
-            objProductViewModel.CategorySelectListItem = vml.CategorySelectList();
-            objProductViewModel.Valid = true;          
-           
-            return View(Tuple.Create(objProductViewModel, vml.ProductList(strCid, false), vml.CategoryList()));
+                    return View(Tuple.Create(objProductViewModel, vml.ProductList(strCid, false), vml.CategoryList()));
+                }
+                else return RedirectToAction("Index", "Product");
+            }
+            else return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]
@@ -80,25 +86,24 @@ namespace ShoppingCart.Controllers
         //The view for editing product
         public ActionResult EditProduct()
         {
-            Session["UserId"] = "1";
-            if (pl.IsAdmin(Session["UserId"]))
+            if (Session["UserId"] != null)
             {
-                if (Request["pid"] != null)
+                if (Session["Admin"].ToString().Equals("True"))
                 {
                     Guid strProductId;
-                    if (Guid.TryParse(Request["pid"].ToString(), out strProductId))
+                    if (Request["pid"] != null && Guid.TryParse(Request["pid"].ToString(), out strProductId))
                     {
                         ProductViewModel objProductViewModel = vml.GetProductById(strProductId);
-                       
+
                         if (objProductViewModel != null)
                             return View(objProductViewModel);
-                        else return RedirectToAction("Index", "Home");
+                        else return RedirectToAction("AddProduct", "Admin");
                     }
-                    else return RedirectToAction("Index", "Home");
+                    else return RedirectToAction("AddProduct", "Admin");
                 }
-                else return RedirectToAction("Index", "Home");
+                else return RedirectToAction("Index", "Product");
             }
-            else return RedirectToAction("Index", "Home");
+            else return RedirectToAction("Login", "Account");
         }
 
         //function for saving product
@@ -137,28 +142,33 @@ namespace ShoppingCart.Controllers
         //The view for adding new category
         public ActionResult AddCategory()
         {
-            Session["UserId"] = "1";
+            if (Session["UserId"] != null)
+            {
+                if (Session["Admin"].ToString().Equals("True"))
+                {
+                    //mode for adding new category
+                    CategoryViewModel objCategoryViewModel = new CategoryViewModel();
+                    objCategoryViewModel.Valid = true;
 
-            //mode for adding new category
-            CategoryViewModel objCategoryViewModel = new CategoryViewModel();
-            objCategoryViewModel.Valid = true;
+                    IEnumerable<CategoryViewModel> listOfCategoryViewModel;
+                    listOfCategoryViewModel = (from objCate in objShoppingCartDBEntities.Categories
 
-            IEnumerable<CategoryViewModel> listOfCategoryViewModel;
-            listOfCategoryViewModel = (from objCate in objShoppingCartDBEntities.Categories
+                                               select new CategoryViewModel()
+                                               {
+                                                   CategoryId = objCate.CategoryId,
+                                                   CategoryName = objCate.CategoryName,
+                                                   Valid = objCate.Valid
+                                               }
+                       ).ToList();
 
-                                       select new CategoryViewModel()
-                                       {
-                                           CategoryId = objCate.CategoryId,
-                                           CategoryName = objCate.CategoryName,
-                                           Valid = objCate.Valid
-                                       }
-               ).ToList();
-
-            return View(Tuple.Create(objCategoryViewModel, listOfCategoryViewModel));
+                    return View(Tuple.Create(objCategoryViewModel, listOfCategoryViewModel));
+                }
+                else return RedirectToAction("Index", "Product");
+            }
+            else return RedirectToAction("Login", "Account");
         }
 
         //function for adding new category
-
         [HttpPost]
         public JsonResult AddCategory(CategoryViewModel objCategoryViewModel)
         {
@@ -183,26 +193,24 @@ namespace ShoppingCart.Controllers
         //The view for editing category
         public ActionResult EditCategory()
         {
-            Session["UserId"] = "1";
-            if (pl.IsAdmin(Session["UserId"]))
+            if (Session["UserId"] != null)
             {
-                if (Request["cid"] != null)
+                if (Session["Admin"].ToString().Equals("True"))
                 {
                     int intCid;
-                    if (int.TryParse(Request["cid"].ToString(), out intCid))
+                    if (Request["cid"] != null && int.TryParse(Request["cid"].ToString(), out intCid))
                     {
                         CategoryViewModel objCategoryViewModel = vml.GetCategoryById(intCid);
 
                         if (objCategoryViewModel != null)
                             return View(objCategoryViewModel);
-                        else return RedirectToAction("Index", "Home");
+                        else return RedirectToAction("AddCategory", "Admin");
                     }
-                    else return RedirectToAction("Index", "Home");
-
+                    else return RedirectToAction("AddCategory", "Admin");
                 }
-                else return RedirectToAction("Index", "Home");
+                else return RedirectToAction("Index", "Product");
             }
-            else return RedirectToAction("Index", "Home");
+            else return RedirectToAction("Login", "Account");
         }
 
         //Function for saving the category

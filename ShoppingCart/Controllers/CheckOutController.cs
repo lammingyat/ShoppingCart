@@ -17,16 +17,19 @@ namespace ShoppingCart.Controllers
         //Get the view of order
         public ActionResult Checkout()
         {
-            Session["UserId"] = "1";
-            int intOrderId;
-            if (Session["UserId"]!=null && Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
-            {                          
-                  OrderViewModel objOrderViewModel = vml.GetOrderByOrderId(intOrderId);
+            if (Session["UserId"] != null)
+            {
+                int intOrderId;
+                if (Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
+                {
+                    OrderViewModel objOrderViewModel = vml.GetOrderByOrderId(intOrderId);
                     if (objOrderViewModel != null)
                         return View(objOrderViewModel);
-                    else return RedirectToAction("Index", "Home");
+                    else return RedirectToAction("OrderHistory", "Order");
+                }
+                else return RedirectToAction("OrderHistory", "Order");
             }
-            else return RedirectToAction("Index", "Home");
+            else return RedirectToAction("Login", "Account");
         }
 
         public JsonResult Pay(OrderViewModel objOrderViewModel)

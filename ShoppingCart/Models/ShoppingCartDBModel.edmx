@@ -65,11 +65,44 @@
           <Property Name="LastModifyUserId" Type="int" Nullable="false" />
           <Property Name="LastModifyDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ShoppingCartDB.dbo.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="Password" />
+            <PropertyRef Name="Admin" />
+            <PropertyRef Name="Valid" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Admin" Type="bit" Nullable="false" />
+          <Property Name="Valid" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" />
+          <Property Name="CreateDate" Type="nvarchar(max)" />
+          <Property Name="LastModifyUserId" Type="int" />
+          <Property Name="LastModiftyDate" Type="datetime" />
+        </EntityType>
         <EntityContainer Name="ShoppingCartDBModelStoreContainer">
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Users].[UserId] AS [UserId], 
+    [Users].[Login] AS [Login], 
+    [Users].[Password] AS [Password], 
+    [Users].[Admin] AS [Admin], 
+    [Users].[Valid] AS [Valid], 
+    [Users].[CreateUserId] AS [CreateUserId], 
+    [Users].[CreateDate] AS [CreateDate], 
+    [Users].[LastModifyUserId] AS [LastModifyUserId], 
+    [Users].[LastModiftyDate] AS [LastModiftyDate]
+    FROM [dbo].[Users] AS [Users]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -92,6 +125,7 @@
           <EntitySet Name="Products" EntityType="ShoppingCartDBModel.Products" />
           <EntitySet Name="OrderDetails" EntityType="ShoppingCartDBModel.OrderDetails" />
           <EntitySet Name="Orders" EntityType="ShoppingCartDBModel.Orders" />
+          <EntitySet Name="Users" EntityType="ShoppingCartDBModel.Users" />
         </EntityContainer>
         <EntityType Name="Products">
           <Key>
@@ -140,6 +174,24 @@
           <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Province" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="Password" />
+            <PropertyRef Name="Admin" />
+            <PropertyRef Name="Valid" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Admin" Type="Boolean" Nullable="false" />
+          <Property Name="Valid" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" />
+          <Property Name="CreateDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifyUserId" Type="Int32" />
+          <Property Name="LastModiftyDate" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -208,6 +260,21 @@
                 <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ShoppingCartDBModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="LastModiftyDate" ColumnName="LastModiftyDate" />
+                <ScalarProperty Name="LastModifyUserId" ColumnName="LastModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="Valid" ColumnName="Valid" />
+                <ScalarProperty Name="Admin" ColumnName="Admin" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

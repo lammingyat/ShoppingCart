@@ -16,8 +16,12 @@ namespace ShoppingCart.Controllers
         private List<ShoppingCartModel> listOfShoppingCartModels;
         public ActionResult Index()
         {
-            listOfShoppingCartModels = Session["CartProduct"] as List<ShoppingCartModel>;
-            return View(listOfShoppingCartModels);
+            if (Session["UserId"] != null)
+            {
+                listOfShoppingCartModels = Session["CartProduct"] as List<ShoppingCartModel>;
+                return View(listOfShoppingCartModels);
+            }
+            else return RedirectToAction("Login", "Account");
         }
 
         //Remove the Product from the cart

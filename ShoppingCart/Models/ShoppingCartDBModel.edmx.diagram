@@ -9,6 +9,7 @@
         <EntityTypeShape EntityType="ShoppingCartDBModel.Products" Width="1.5" PointX="2.5" PointY="1.25" />
         <EntityTypeShape EntityType="ShoppingCartDBModel.OrderDetails" Width="1.5" PointX="5.125" PointY="2.375" />
         <EntityTypeShape EntityType="ShoppingCartDBModel.Orders" Width="1.5" PointX="6.875" PointY="3.25" />
+        <EntityTypeShape EntityType="ShoppingCartDBModel.Users" Width="1.5" PointX="3.125" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

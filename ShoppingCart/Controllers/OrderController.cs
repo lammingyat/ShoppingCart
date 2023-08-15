@@ -17,24 +17,25 @@ namespace ShoppingCart.Controllers
         //Get the view of order
         public ActionResult OrderHistory()
         {
-            Session["UserId"] = "1";
             if (Session["UserId"] != null)
             {
                 return View(vml.GetOrderListByUserId(int.Parse(Session["UserId"].ToString())));
             }
-            else return RedirectToAction("Index", "Home");
+            else return RedirectToAction("Login", "Account");
         }
 
         public ActionResult OrderDetail()
         {
-            Session["UserId"] = "1";
-            int intOrderId;
-            if (Session["UserId"] != null && Request["oid"]!=null && int.TryParse(Request["oid"].ToString(), out intOrderId))
+            if (Session["UserId"] != null)
             {
-                return View(Tuple.Create(vml.GetOrderByOrderId(intOrderId), vml.GetOrderDetailByOrderId(intOrderId)));
+                int intOrderId;
+                if ( Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
+                {
+                    return View(Tuple.Create(vml.GetOrderByOrderId(intOrderId), vml.GetOrderDetailByOrderId(intOrderId)));
+                }
+                else return RedirectToAction("OrderHistory", "Order");
             }
-            else return RedirectToAction("Index", "Home");
-
+            else return RedirectToAction("Login", "Account");
         }
 
         public JsonResult CancelOrder(string OrderId)

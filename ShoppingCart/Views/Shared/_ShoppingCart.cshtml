@@ -1,4 +1,11 @@
-﻿<ul class="nav navbar-nav navbar-right">
+﻿<script type="text/javascript">
+    function GoToLogout() {
+        window.location = location.protocol + '//' + location.host + "/Account/Logout";
+    }
+
+</script>
+
+<ul class="nav navbar-nav navbar-right">
     <li>
         @if (Session["CartCounter"] == null) //Show the number of items those already in cart(set a id for the link and change the text when click add to cart in shopping page)
         {
@@ -7,7 +14,13 @@
         else
         {
             @Html.ActionLink("Cart(" + Session["CartCounter"] + ")", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" })
-        }
+        }       
+    </li>
+    <li>
+        @if (Session["UserId"] != null)
+        {
+    <a onclick="GoToLogout();">Logout</a>
+    }
     </li>
 </ul>
 

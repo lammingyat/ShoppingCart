@@ -23,10 +23,13 @@ namespace ShoppingCart.Controllers
         // GET: Shopping
         public ActionResult Index()
         {
-            Session["UserId"] = "1";
-            string strCid = Request.Params["cid"];            
-            ViewModelLibrary vml = new ViewModelLibrary();
-            return View(Tuple.Create(vml.ProductList(strCid,true), vml.CategoryList())); ;
+            if (Session["UserId"] != null)
+            {
+                string strCid = Request.Params["cid"];
+                ViewModelLibrary vml = new ViewModelLibrary();
+                return View(Tuple.Create(vml.ProductList(strCid, true), vml.CategoryList()));
+            }
+            else return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]

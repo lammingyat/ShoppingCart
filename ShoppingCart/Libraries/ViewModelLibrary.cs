@@ -12,6 +12,8 @@ namespace ShoppingCart.Libraries
     {
         ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
 
+        
+
         //model for show the category
         public IEnumerable<CategoryViewModel> CategoryList()
         {         

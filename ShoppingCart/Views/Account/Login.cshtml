@@ -1,0 +1,59 @@
+﻿@model ShoppingCart.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Login";
+}
+<script type="text/javascript">
+    function ResetLogin() {
+        $("#Login").val("");
+        $("#Password").val("");
+    }
+
+    function GoToLogin() {
+        var formData = new FormData();
+        formData.append("Login", $("#Login").val());
+        formData.append("Password", $("#Password").val());
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Account/GoToLogin',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    window.location = "../Product";
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Item, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container" style="width: 100vw;" align="center">
+        <h2 class="text-center">Login</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        Login :
+        @Html.TextBoxFor(model => model.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login", @maxlength=20, @Value="cantek" })
+    </div>
+    <div class="form-group">
+        Password :
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @maxlength = 20, @Value = "cantek", placeholder = "Password" })
+    </div>
+        <div class="form-group">
+            <input type="button" value="Login" class="btn btn-primary" onclick="GoToLogin();" />
+            &nbsp;
+            <input type="button" value="Reset" class="btn btn-danger" onclick="ResetLogin();" />
+            <br/>
+            <a href="../Account/Register">Not have an account? Register!</a>
+        </div>
+    </div>
+}
