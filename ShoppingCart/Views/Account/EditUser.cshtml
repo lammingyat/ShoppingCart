@@ -1,0 +1,92 @@
+﻿@model  ShoppingCart.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Edit User";
+}
+
+<h2>Edit User</h2>
+
+<!--Edit Item-->
+<script type="text/javascript">
+    function ResetUser(User) {
+        $("#Login").val($(User).attr("Login"));
+        $("#Password").val($(User).attr("Password"));
+        document.getElementById("Valid").checked = $(User).attr("Valid");
+        document.getElementById("Admin").checked = $(User).attr("Admin");
+    }
+
+    function SaveUser(User) {
+        var formData = new FormData();
+        formData.append("UserId", $(User).attr("UserId"));
+        formData.append("Login", $("#Login").val());
+        formData.append("Password", $("#Password").val());
+        formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
+        formData.append("Valid", String(document.getElementById("Admin").checked.toString()));
+
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Admin/SaveUser',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    location.reload();
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to saving user, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="container">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-4">
+        <div class="form-group">
+            Id :@Model.UserId
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Name :
+            @Html.TextBoxFor(model => model.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login" })
+            @Html.ValidationMessageFor(model => model.Login, "Login can't exceed 20 words", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Password :
+            @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", placeholder = "Password", @type = "password" })
+            @Html.ValidationMessageFor(model => model.Password, "Password can't exceed 20 words", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Valid :
+            @Html.CheckBoxFor(model => model.Valid, new { @class = "form-control", autocomplete = "Off", @id = "Valid" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Admin :
+            @Html.CheckBoxFor(model => model.Admin, new { @class = "form-control", autocomplete = "Off", @id = "Admin" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" value="Save" class="btn btn-primary" UserId="@Model.UserId" onclick="SaveUser(this)" />
+            &nbsp;
+            <input type="button" value="Reset" class="btn btn-danger" Login="@Model.Login" Passoword="@Model.Password" Valid=@Model.Valid Admin=@Model.Admin onclick="ResetUser(this)" />
+        </div>
+    </div>
+</div>
+}

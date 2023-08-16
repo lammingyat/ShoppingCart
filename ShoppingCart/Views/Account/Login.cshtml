@@ -42,11 +42,12 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         Login :
-        @Html.TextBoxFor(model => model.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login", @maxlength=20, @Value="cantek" })
+        @Html.TextBoxFor(model => model.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login", @maxlength = 20, @Value = "cantek" })
+        @Html.ValidationMessageFor(model => model.Login, "Login can't exceed 20 words", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         Password :
-        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @maxlength = 20, @Value = "cantek", placeholder = "Password",  @type = "password" })
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password",  @Value = "cantek", placeholder = "Password",  @type = "password" })
     </div>
         <div class="form-group">
             <input type="button" value="Login" class="btn btn-primary" onclick="GoToLogin();" />

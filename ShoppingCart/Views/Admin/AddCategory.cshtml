@@ -25,13 +25,13 @@
             success: function (data) {
                 if (data.Success) {
                     alert(data.Message);
-                    ResetCategory();
+                    location.reload();
                 }
                 else
                     alert(data.Message);
             },
             error: function () {
-                alert("There is some problem to add Item, please contact the developer.");
+                alert("There is some problem to add category, please contact the developer.");
             }
         });
     }
@@ -48,6 +48,7 @@
             <div class="form-group">
                 Category Name :
                 @Html.TextBoxFor(model => model.Item1.CategoryName, new { @class = "form-control", autocomplete = "Off", @id = "CategoryName" })
+                @Html.ValidationMessageFor(model => model.Item1.CategoryName, "CategoryName can't exceed 30 words", new { @class = "text-danger" })
             </div>
         </div>
         <div class="col-md-4">

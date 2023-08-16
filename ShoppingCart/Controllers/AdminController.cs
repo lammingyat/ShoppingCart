@@ -12,9 +12,9 @@ namespace ShoppingCart.Controllers
 {
     public class AdminController : Controller
     {
-        ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
-        ViewModelLibrary vml = new ViewModelLibrary();
-        
+        private ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
+        private ViewModelLibrary vml = new ViewModelLibrary();
+     
 
         public AdminController()
         {
@@ -35,7 +35,7 @@ namespace ShoppingCart.Controllers
                     objProductViewModel.CategorySelectListItem = vml.CategorySelectList();
                     objProductViewModel.Valid = true;
 
-                    return View(Tuple.Create(objProductViewModel, vml.ProductList(strCid, false), vml.CategoryList()));
+                    return View(Tuple.Create(objProductViewModel, vml.ProductList(strCid, false), vml.GetCategory(true)));
                 }
                 else return RedirectToAction("Index", "Product");
             }
@@ -133,7 +133,7 @@ namespace ShoppingCart.Controllers
                 Product.LastModifyDate = DateTime.Now;
                 objShoppingCartDBEntities.SaveChanges();
 
-                return Json(new { Success = true, Message = "Product(Code:" + Product.ProductCode + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
+                return Json(new { Success = true, Message = "Product(Id:" + Product.ProductId + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
             }
             else
                 return Json(new { Success = false, Message = "Some data is invalid." }, JsonRequestBehavior.AllowGet);
@@ -150,18 +150,7 @@ namespace ShoppingCart.Controllers
                     CategoryViewModel objCategoryViewModel = new CategoryViewModel();
                     objCategoryViewModel.Valid = true;
 
-                    IEnumerable<CategoryViewModel> listOfCategoryViewModel;
-                    listOfCategoryViewModel = (from objCate in objShoppingCartDBEntities.Categories
-
-                                               select new CategoryViewModel()
-                                               {
-                                                   CategoryId = objCate.CategoryId,
-                                                   CategoryName = objCate.CategoryName,
-                                                   Valid = objCate.Valid
-                                               }
-                       ).ToList();
-
-                    return View(Tuple.Create(objCategoryViewModel, listOfCategoryViewModel));
+                    return View(Tuple.Create(objCategoryViewModel, vml.GetCategory(false)));
                 }
                 else return RedirectToAction("Index", "Product");
             }
@@ -224,7 +213,7 @@ namespace ShoppingCart.Controllers
                 Category.LastModifyUserId = Int32.Parse(Session["UserId"].ToString());
                 Category.LastModifyDate = DateTime.Now;
                 objShoppingCartDBEntities.SaveChanges();
-                return Json(new { Success = true, Message = "Category(Name:" + Category.CategoryId + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
+                return Json(new { Success = true, Message = "Category(Id:" + Category.CategoryId + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
             }
             else
                 return Json(new { Success = false, Message = "Some data is invalid." }, JsonRequestBehavior.AllowGet);

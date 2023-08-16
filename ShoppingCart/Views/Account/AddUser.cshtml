@@ -1,0 +1,118 @@
+﻿@model Tuple<ShoppingCart.ViewModels.UserViewModel, IEnumerable<ShoppingCart.ViewModels.UserViewModel>>
+@{
+    ViewBag.Title = "AddUser";
+}
+
+<!--Add New User-->
+<script type="text/javascript">
+    function ResetUser() {
+        $("#Login").val("");
+        $("#Password").val("");
+        document.getElementById("Valid").checked = true;
+        document.getElementById("Admin").checked = false;
+    }
+
+    function AddUser() {
+        var formData = new FormData();
+        formData.append("Login", $("#Login").val());
+        formData.append("Password", $("#Password").val());
+        formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
+        formData.append("Valid", String(document.getElementById("Admin").checked.toString()));
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Account/AddUser',
+            data: formData,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    location.reload();
+                }
+                else
+                    alert(data.Message);
+            },
+            error: function () {
+                alert("There is some problem to add Item, please contact the developer.");
+            }
+        });
+    }
+</script>
+
+<h2>User Manage</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="container">
+    <h2 class="text-center">Add New User</h2>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-4">
+        <div class="form-group">
+            Login :
+            @Html.TextBoxFor(model => model.Item1.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login", @maxlength = 20 })
+            @Html.ValidationMessageFor(model => model.Item1.Login, "Login can't exceed 20 words", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Password :
+            @Html.TextBoxFor(model => model.Item1.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @maxlength = 20, placeholder = "Password", @type = "password" })
+            @Html.ValidationMessageFor(model => model.Item1.Login, "Password can't exceed 20 words", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Valid :
+            @Html.CheckBoxFor(model => model.Item1.Valid, new { @class = "form-control", autocomplete = "Off", @id = "Valid" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            Admin :
+            @Html.CheckBoxFor(model => model.Item1.Admin, new { @class = "form-control", autocomplete = "Off", @id = "Admin" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" value="Add" class="btn btn-primary" onclick="AddUser();" />
+            &nbsp;
+            <input type="button" value="Reset" class="btn btn-danger" onclick="ResetUser();" />
+        </div>
+    </div>
+</div>
+}
+
+<!--User for Edit/Valid-->
+<script type="text/javascript">
+
+    function EditUser(UserId) {
+        window.location = location.protocol + '//' + location.host + "/Account/EditUser?uid=" + UserId;
+    }
+</script>
+
+<div class="container">
+    <h2 class="text-center">User List</h2>
+
+    @foreach (var user in Model.Item2)
+    {
+        <div class="col-md-4" style="border: 2px solid black; width:300px;">
+            <div style="text-align: center; border-bottom: 2px solid maroon">
+                <h3>ID: @user.Login</h3>
+            </div>
+            <div>
+                <div class="col-md-4">
+                    <b>Valid: @user.Valid</b>
+                </div>
+                <div class="col-md-4">
+                    <b>Admin: @user.Admin</b>
+                </div>
+                <div class="col-md-4">
+                    <input type="button" value="Edit" class="btn btn-primary" onclick="EditUser('@user.UserId');" />
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

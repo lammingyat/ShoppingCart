@@ -12,15 +12,10 @@ namespace ShoppingCart.ViewModels
         [Required]
         [StringLength(20, ErrorMessage = "The maximum digit is 20")]
         public string Login { get; set; }
-        [Required]
-        [StringLength(20, ErrorMessage = "The maximum digit is 20")]
         public string Password { get; set; }
-
         public bool Admin { get; set; }
         public bool Valid { get; set; }
-
         public int CreateUserId { get; set; }
-
         public DateTime CreateDate { get; set; }
         public int LastModifyUserId { get; set; }
 

@@ -16,6 +16,7 @@ namespace ShoppingCart.Controllers
     {
         private ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
         private ViewModelLibrary vml = new ViewModelLibrary();
+        private StringLibrary sl = new StringLibrary();
         // GET: Account
         public ActionResult Register()
         {
@@ -60,9 +61,8 @@ namespace ShoppingCart.Controllers
 
         public ActionResult Login()
         {
-            string strHashedPassword = SecurePasswordHasher.Hash("cantek");
-            bool b = SecurePasswordHasher.Verify("cantek", strHashedPassword);
-
+            string strHashedPassword = sl.GetHashString("cantek");
+            bool b = sl.CheckHashStringMatch("cantek", strHashedPassword);
 
             UserViewModel objUserViewModel = new UserViewModel();
             return View(objUserViewModel);
@@ -93,7 +93,95 @@ namespace ShoppingCart.Controllers
             Session["UserId"] = null;
             Session["Admin"] = null;
             return View();// RedirectToAction("Login", "Account");            
-        }       
+        } 
+
+        public ActionResult AddUser()
+        {
+            if (Session["UserId"] != null)
+            {
+                if (Session["Admin"].ToString().Equals("True"))
+                {
+                    //mode for adding new user
+                    UserViewModel objUserViewModel = new UserViewModel();
+                    objUserViewModel.Valid = true;
+                    objUserViewModel.Admin = false;                    
+
+                    return View(Tuple.Create(objUserViewModel, vml.GetAllUser()));
+                }
+                else return RedirectToAction("Index", "Product");
+            }
+            else return RedirectToAction("Login", "Account");
+
+        }
+
+        //function for adding new category
+        [HttpPost]
+        public JsonResult AddUser(UserViewModel objUserViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Users objUser = new Users();
+                objUser.Login = objUserViewModel.Login;
+                objUser.Password = sl.GetHashString(objUserViewModel.Password);
+                objUser.Valid = objUserViewModel.Valid;
+                objUser.Admin = objUserViewModel.Admin;
+                objUser.CreateUserId = Int32.Parse(Session["UserId"].ToString());
+                objUser.CreateDate = DateTime.Now;
+                objUser.LastModifyUserId = Int32.Parse(Session["UserId"].ToString());
+                objUser.LastModifyDate = DateTime.Now;
+                objShoppingCartDBEntities.Users.Add(objUser);
+                objShoppingCartDBEntities.SaveChanges();
+
+                return Json(new { Success = true, Message = "User(Login:" + objUser.Login + ") is added Successfully." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(new { Success = false, Message = "Some data is invalid." }, JsonRequestBehavior.AllowGet);
+        }
+
+        //The view for editing user
+        public ActionResult EditUser()
+        {
+            if (Session["UserId"] != null)
+            {
+                if (Session["Admin"].ToString().Equals("True"))
+                {
+                    int intUid;
+                    if (Request["uid"] != null && int.TryParse(Request["uid"].ToString(), out intUid))
+                    {
+                        UserViewModel objUserViewModel = vml.GetUserById(intUid);
+
+                        if (objUserViewModel != null)
+                            return View(objUserViewModel);
+                        else return RedirectToAction("AddUser", "Account");
+                    }
+                    else return RedirectToAction("AddUser", "Account");
+                }
+                else return RedirectToAction("Index", "Product");
+            }
+            else return RedirectToAction("Login", "Account");
+        }
+
+        //Function for saving the category
+        public JsonResult SaveUser(UserViewModel objUserViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Users User = objShoppingCartDBEntities.Users.First(x => x.UserId == objUserViewModel.UserId);
+                User.Login = objUserViewModel.Login;
+                if (sl.IsHashStyle(objUserViewModel.Login))
+                    User.Password = objUserViewModel.Login;
+                else
+                    User.Password = sl.GetHashString(objUserViewModel.Login);
+
+                User.Valid = objUserViewModel.Valid;
+                User.LastModifyUserId = Int32.Parse(Session["UserId"].ToString());
+                User.LastModifyDate = DateTime.Now;
+                objShoppingCartDBEntities.SaveChanges();
+                return Json(new { Success = true, Message = "User(Id:" + User.UserId + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(new { Success = false, Message = "Some data is invalid." }, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

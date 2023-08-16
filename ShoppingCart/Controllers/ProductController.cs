@@ -27,7 +27,7 @@ namespace ShoppingCart.Controllers
             {
                 string strCid = Request.Params["cid"];
                 ViewModelLibrary vml = new ViewModelLibrary();
-                return View(Tuple.Create(vml.ProductList(strCid, true), vml.CategoryList()));
+                return View(Tuple.Create(vml.ProductList(strCid, true), vml.GetCategory(true)));
             }
             else return RedirectToAction("Login", "Account");
         }
