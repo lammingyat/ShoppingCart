@@ -16,10 +16,10 @@ namespace ShoppingCart.Models
     {
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public bool Valid { get; set; }
         public int CreateUserId { get; set; }
         public System.DateTime CreateDate { get; set; }
         public int LastModifyUserId { get; set; }
         public System.DateTime LastModifyDate { get; set; }
-        public bool Valid { get; set; }
     }
 }

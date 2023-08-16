@@ -10,8 +10,6 @@ namespace ShoppingCart.Controllers
 {
     public class HomeController : Controller
     {
-        private PermissionsLibrary pl = new PermissionsLibrary();
-
         public ActionResult Index()
         {
               return RedirectToAction("Login", "Account");

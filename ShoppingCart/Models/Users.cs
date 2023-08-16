@@ -20,8 +20,8 @@ namespace ShoppingCart.Models
         public bool Admin { get; set; }
         public bool Valid { get; set; }
         public Nullable<int> CreateUserId { get; set; }
-        public string CreateDate { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<int> LastModifyUserId { get; set; }
-        public Nullable<System.DateTime> LastModiftyDate { get; set; }
+        public Nullable<System.DateTime> LastModifyDate { get; set; }
     }
 }

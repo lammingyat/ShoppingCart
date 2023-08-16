@@ -22,8 +22,9 @@ namespace ShoppingCart.Controllers
                 int intOrderId;
                 if (Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
                 {
+                    //prevent another user access
                     OrderViewModel objOrderViewModel = vml.GetOrderByOrderId(intOrderId);
-                    if (objOrderViewModel != null)
+                    if (objOrderViewModel != null && objOrderViewModel.UserID.ToString().Equals(Session["UserId"].ToString()))
                         return View(objOrderViewModel);
                     else return RedirectToAction("OrderHistory", "Order");
                 }

@@ -46,7 +46,7 @@
     </div>
     <div class="form-group">
         Password :
-        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @maxlength = 20, @Value = "cantek", placeholder = "Password" })
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @maxlength = 20, @Value = "cantek", placeholder = "Password",  @type = "password" })
     </div>
         <div class="form-group">
             <input type="button" value="Login" class="btn btn-primary" onclick="GoToLogin();" />

@@ -29,9 +29,13 @@ namespace ShoppingCart.Controllers
             if (Session["UserId"] != null)
             {
                 int intOrderId;
-                if ( Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
+                if (Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
                 {
-                    return View(Tuple.Create(vml.GetOrderByOrderId(intOrderId), vml.GetOrderDetailByOrderId(intOrderId)));
+                    OrderViewModel objOrderViewModel = vml.GetOrderByOrderId(intOrderId);
+                    //prevent another user access
+                    if (objOrderViewModel.UserID.ToString().Equals(Session["UserId"].ToString()))
+                        return View(Tuple.Create(objOrderViewModel, vml.GetOrderDetailByOrderId(intOrderId)));
+                    else return RedirectToAction("OrderHistory", "Order");
                 }
                 else return RedirectToAction("OrderHistory", "Order");
             }
