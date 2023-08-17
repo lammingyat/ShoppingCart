@@ -76,7 +76,7 @@
         <div class="form-group">
             Product Code :
             @Html.TextBoxFor(model => model.ProductCode, new { @class = "form-control", autocomplete = "Off", @id = "ProductCode" })
-            @Html.ValidationMessageFor(model => model.ProductCode, "Product Code can't exceed 20 words", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.ProductCode, "Product Code can't be empty or exceed 20 words", new { @class = "text-danger" })
         </div>
     </div>
 

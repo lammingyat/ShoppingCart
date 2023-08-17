@@ -61,9 +61,6 @@ namespace ShoppingCart.Controllers
 
         public ActionResult Login()
         {
-            string strHashedPassword = sl.GetHashString("cantek");
-            bool b = sl.CheckHashStringMatch("cantek", strHashedPassword);
-
             UserViewModel objUserViewModel = new UserViewModel();
             return View(objUserViewModel);
         }
@@ -92,6 +89,8 @@ namespace ShoppingCart.Controllers
         {
             Session["UserId"] = null;
             Session["Admin"] = null;
+            Session["CartProduct"] = null;
+            Session["CartCounter"] = null;
             return View();// RedirectToAction("Login", "Account");            
         } 
 
@@ -161,23 +160,62 @@ namespace ShoppingCart.Controllers
             else return RedirectToAction("Login", "Account");
         }
 
-        //Function for saving the category
+        //Function for saving the user
         public JsonResult SaveUser(UserViewModel objUserViewModel)
         {
             if (ModelState.IsValid)
             {
-                Users User = objShoppingCartDBEntities.Users.First(x => x.UserId == objUserViewModel.UserId);
+                Users User = objShoppingCartDBEntities.Users.FirstOrDefault(x => x.UserId == objUserViewModel.UserId);
                 User.Login = objUserViewModel.Login;
-                if (sl.IsHashStyle(objUserViewModel.Login))
-                    User.Password = objUserViewModel.Login;
+                if (sl.IsHashStyle(objUserViewModel.Password))
+                    User.Password = objUserViewModel.Password;
                 else
-                    User.Password = sl.GetHashString(objUserViewModel.Login);
+                    User.Password = sl.GetHashString(objUserViewModel.Password);
 
                 User.Valid = objUserViewModel.Valid;
                 User.LastModifyUserId = Int32.Parse(Session["UserId"].ToString());
                 User.LastModifyDate = DateTime.Now;
                 objShoppingCartDBEntities.SaveChanges();
                 return Json(new { Success = true, Message = "User(Id:" + User.UserId + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(new { Success = false, Message = "Some data is invalid." }, JsonRequestBehavior.AllowGet);
+        }
+
+        //The view for editing password
+        public ActionResult EditPassword()
+        {
+            if (Session["UserId"] != null && Request.Params["uid"]!=null && Session["UserId"].ToString().Equals(Request.Params["uid"].ToString()))
+            {
+                int intUid;
+                if (int.TryParse(Request["uid"].ToString(), out intUid))
+                {
+                    UserViewModel objUserViewModel = vml.GetUserById(intUid);
+
+                    if (objUserViewModel != null)
+                        return View(objUserViewModel);
+                    else return RedirectToAction("Index", "Product");
+                }
+                else return RedirectToAction("Index", "Product");              
+            }
+            else return RedirectToAction("Index", "Product");
+        }
+
+
+        //Function for saving the password
+        public JsonResult SavePassword(UserViewModel objUserViewModel)
+        {
+            if (true)// (ModelState.IsValid)
+            {
+                Users User = objShoppingCartDBEntities.Users.First(x => x.UserId == objUserViewModel.UserId);
+                   if (sl.IsHashStyle(objUserViewModel.Password))
+                    User.Password = objUserViewModel.Password;
+                else
+                    User.Password = sl.GetHashString(objUserViewModel.Password);
+                User.LastModifyUserId = Int32.Parse(Session["UserId"].ToString());
+                User.LastModifyDate = DateTime.Now;
+                objShoppingCartDBEntities.SaveChanges();
+                return Json(new { Success = true, Message = "The password of user(Id:" + User.UserId + ") is edited Successfully." }, JsonRequestBehavior.AllowGet);
             }
             else
                 return Json(new { Success = false, Message = "Some data is invalid." }, JsonRequestBehavior.AllowGet);

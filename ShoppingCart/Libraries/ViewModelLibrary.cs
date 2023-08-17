@@ -11,7 +11,8 @@ namespace ShoppingCart.Libraries
 {
     public class ViewModelLibrary
     {
-        ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
+        private ShoppingCartDBEntities objShoppingCartDBEntities = new ShoppingCartDBEntities();
+        private StringLibrary sl = new StringLibrary();
 
         //model for show the user
         public IEnumerable<UserViewModel> GetAllUser()
@@ -32,18 +33,22 @@ namespace ShoppingCart.Libraries
         public UserViewModel GetUserByLoginAndPassword(string strLogin, string strPawword)
         {
             UserViewModel objUserViewModel = (from objUser in objShoppingCartDBEntities.Users
-                                              where objUser.Login == strLogin && objUser.Password == strPawword
+                                              where objUser.Login == strLogin
                                               select new UserViewModel()
                                               {
                                                   UserId = objUser.UserId,
                                                   Valid = objUser.Valid,
                                                   Admin = objUser.Admin,
                                                   Login = objUser.Login,
-                                                  Password = objUser.Password                                                  
+                                                  Password = objUser.Password
                                               }
 
-                                                  ).First();
-            return objUserViewModel;
+                                                  ).FirstOrDefault();
+
+            if (objUserViewModel != null && sl.CheckHashStringMatch(strPawword, objUserViewModel.Password))
+                return objUserViewModel;
+            else
+                return null;
         }
 
         public UserViewModel GetUserByLogin(string strLogin)

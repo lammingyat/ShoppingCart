@@ -43,7 +43,6 @@
     <div class="form-group">
         Login :
         @Html.TextBoxFor(model => model.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login", @maxlength = 20, @Value = "cantek" })
-        @Html.ValidationMessageFor(model => model.Login, "Login can't exceed 20 words", new { @class = "text-danger" })
     </div>
     <div class="form-group">
         Password :

@@ -20,7 +20,7 @@
         formData.append("Login", $("#Login").val());
         formData.append("Password", $("#Password").val());
         formData.append("Valid", String(document.getElementById("Valid").checked.toString()));
-        formData.append("Valid", String(document.getElementById("Admin").checked.toString()));
+        formData.append("Admin", String(document.getElementById("Admin").checked.toString()));
 
         $.ajax({
             async: true,
@@ -28,7 +28,7 @@
             type: 'POST',
             contentType: false,
             processData: false,
-            url: '/Admin/SaveUser',
+            url: '/Account/SaveUser',
             data: formData,
             success: function (data) {
                 if (data.Success) {
@@ -57,16 +57,16 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            Name :
+            Login :
             @Html.TextBoxFor(model => model.Login, new { @class = "form-control", autocomplete = "Off", @id = "Login" })
-            @Html.ValidationMessageFor(model => model.Login, "Login can't exceed 20 words", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.Login, "Login can't empty or exceed 20 words", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             Password :
             @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", placeholder = "Password", @type = "password" })
-            @Html.ValidationMessageFor(model => model.Password, "Password can't exceed 20 words", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.Password, "Password can't empty", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-md-4">

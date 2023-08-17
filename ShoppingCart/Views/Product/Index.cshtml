@@ -62,12 +62,13 @@
                 {
                     <div class="col-md-4" style="border: 2px solid black; width:300px">
                         <div style="text-align: center; border-bottom: 2px solid maroon">
-                            <h3>@product.ProductName</h3>
+                            <h2>@product.ProductCode</h2>
+                            <h2>@product.ProductName</h2>
                         </div>
                         <div>
                             <div class="col-md-8">
                                 <img src="@Url.Content(product.ImagePath)" width="150px" height="150px" />
-                            </div>
+                            </div>                            
                             <div class="col-md-4" style="text-align: left; margin-bottom:10px;">
                                 <b>Category: @product.CategoryName</b>
                             </div>

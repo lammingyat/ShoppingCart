@@ -58,8 +58,8 @@
     <div class="col-md-4">
         <div class="form-group">
             Password :
-            @Html.TextBoxFor(model => model.Item1.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @maxlength = 20, placeholder = "Password", @type = "password" })
-            @Html.ValidationMessageFor(model => model.Item1.Login, "Password can't exceed 20 words", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.Item1.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", placeholder = "Password", @type = "password" })
+            @Html.ValidationMessageFor(model => model.Item1.Password, "Password can't empty", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-md-4">

@@ -3,24 +3,28 @@
         window.location = location.protocol + '//' + location.host + "/Account/Logout";
     }
 
+    function EditPassword(UserId) {
+        window.location = location.protocol + '//' + location.host + "/Account/EditPassword?uid=" + UserId;
+    }
+
 </script>
 
 <ul class="nav navbar-nav navbar-right">
-    <li>
-        @if (Session["CartCounter"] == null) //Show the number of items those already in cart(set a id for the link and change the text when click add to cart in shopping page)
-        {
-@Html.ActionLink("Cart", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" }) }
-else
-{
-@Html.ActionLink("Cart(" + Session["CartCounter"] + ")", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" })}
-    </li>
     @if (Session["UserId"] != null)
     {
-        <li><a>User: @Session["Login"].ToString()</a></li>
         <li>
-            <a onclick="GoToLogout();">Logout</a>
+        @if (Session["CartCounter"] == null) //Show the number of items those already in cart(set a id for the link and change the text when click add to cart in shopping page)
+        {
+            @Html.ActionLink("Cart", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" }) 
+        }
+        else
+        {
+            @Html.ActionLink("Cart(" + Session["CartCounter"] + ")", "Index", "ShoppingCart", routeValues: new { Area = "" }, htmlAttributes: new { id = "CartProduct" })
+        }
         </li>
+        <li><a>User: @Session["Login"].ToString()</a></li>
+        <li><a onclick="EditPassword('@Session["UserId"].ToString()');">Edit Password</a></li>
+        <li><a onclick="GoToLogout();">Logout</a></li>
     }
-
 </ul>
 

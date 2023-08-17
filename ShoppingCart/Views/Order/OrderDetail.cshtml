@@ -34,6 +34,33 @@
             });
         }
     }
+
+    function CancelOrderDetail(OrderDetail) {
+        const response = confirm("Are you sure cancel this product(ProductCode:" + $(OrderDetail).attr("ProductCode") + ")?");
+        if (response) {
+            var formData = new FormData();
+            formData.append("OrderDetailId", $(OrderDetail).attr("OrderDetailId"));
+            formData.append("OrderId", $(OrderDetail).attr("OrderId"));
+
+            $.ajax({
+                async: true,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                url: '/Order/CancelOrderDetail',
+                success: function (data) {
+                    if (data.Success) {
+                        alert(data.Message);
+                        location.reload();
+                    }
+                },
+                error: function () {
+                    alert("There is some problem. Please contact the developer.");
+                }
+            });
+        }
+    }
 </script>
 
 <h2>Order</h2>
@@ -162,7 +189,7 @@
     <td style="text-align: right">
         @if (Model.Item1.Valid)
         {
-            <input type="button" value="Cancel" class="btn btn-success" onclick="CancelProduct(this)" />
+            <input type="button" value="Cancel" class="btn btn-success" OrderId="@OrderDetail.OrderId" OrderDetailId="@OrderDetail.OrderDetailId" ProductCode="@OrderDetail.ProductCode" onclick="CancelOrderDetail(this)" />
         }
         </td>
     

@@ -20,14 +20,17 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (Session["Admin"]!=null && Session["Admin"].ToString().Equals("True"))
+                    @if (Session["Admin"] != null && Session["Admin"].ToString().Equals("True"))
                     {
-                    <li>@Html.ActionLink("User Manage", "AddUser", "Account")</li>
-                    <li>@Html.ActionLink("Category Manage", "AddCategory", "Admin")</li>
-                    <li>@Html.ActionLink("Product Manage", "AddProduct", "Admin")</li>
+                        <li>@Html.ActionLink("User Manage", "AddUser", "Account")</li>
+                        <li>@Html.ActionLink("Category Manage", "AddCategory", "Admin")</li>
+                        <li>@Html.ActionLink("Product Manage", "AddProduct", "Admin")</li>
                     }
+                    @if (Session["User"] != null)
+                    {
                     <li>@Html.ActionLink("Product", "Index", "Product")</li>
                     <li>@Html.ActionLink("Order History", "OrderHistory", "Order")</li>
+                    }
                 </ul>
                 @Html.Partial("_ShoppingCart")
             </div>

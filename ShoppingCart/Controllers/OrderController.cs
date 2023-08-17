@@ -52,5 +52,27 @@ namespace ShoppingCart.Controllers
 
             return Json(new { Success = true , Message="success to cancel the order(Id:" + OrderId + ")"}, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult CancelOrderDetail(OrderDetailsViewsModel objOrderDetailsViewsModel)
+        {
+            //invalid the order detail
+            OrderDetails OrderDetail = objShoppingCartDBEntities.OrderDetails.FirstOrDefault(model => model.OrderDetailId == objOrderDetailsViewsModel.OrderDetailId);
+            OrderDetail.Valid = false;
+            OrderDetail.InvalidDate = DateTime.Now;
+            objShoppingCartDBEntities.SaveChanges();
+
+            //recalucate the amount of order
+            decimal total = 0;
+            IEnumerable<OrderDetailsViewsModel> listofOrderDetailsViewsModel = vml.GetOrderDetailByOrderId(OrderDetail.OrderId);
+            foreach (OrderDetailsViewsModel objOrderDetail in listofOrderDetailsViewsModel)
+                total += objOrderDetail.Total;
+
+            Orders Order = objShoppingCartDBEntities.Orders.FirstOrDefault(model => model.OrderId == objOrderDetailsViewsModel.OrderId);
+            Order.Total = total;
+            objShoppingCartDBEntities.SaveChanges();
+
+
+            return Json(new { Success = true, Message = "success to cancel this product(Code:" + objOrderDetailsViewsModel.ProductCode + ") in the order(Id:" + objOrderDetailsViewsModel.OrderId+ ")" }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
