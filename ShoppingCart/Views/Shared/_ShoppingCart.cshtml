@@ -26,5 +26,10 @@
         <li><a onclick="EditPassword('@Session["UserId"].ToString()');">Edit Password</a></li>
         <li><a onclick="GoToLogout();">Logout</a></li>
     }
+    else
+    {
+        <li>@Html.ActionLink("Login", "Login", "Account")</li>
+    }
+
 </ul>
 

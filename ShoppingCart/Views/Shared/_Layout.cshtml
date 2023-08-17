@@ -19,7 +19,7 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav">                    
                     @if (Session["Admin"] != null && Session["Admin"].ToString().Equals("True"))
                     {
                         <li>@Html.ActionLink("User Manage", "AddUser", "Account")</li>
@@ -28,8 +28,8 @@
                     }
                     @if (Session["User"] != null)
                     {
-                    <li>@Html.ActionLink("Product", "Index", "Product")</li>
-                    <li>@Html.ActionLink("Order History", "OrderHistory", "Order")</li>
+                        <li>@Html.ActionLink("Product", "Index", "Product")</li>
+                        <li>@Html.ActionLink("Order History", "OrderHistory", "Order")</li>
                     }
                 </ul>
                 @Html.Partial("_ShoppingCart")
@@ -40,6 +40,7 @@
         @RenderBody()
         <hr />
         <footer>
+            <li>@Html.ActionLink("Contact Me", "Contact", "Home")</li>
             <p>&copy; @DateTime.Now.Year - Shopping Cart by Nick Lam</p>
         </footer>
     </div>
