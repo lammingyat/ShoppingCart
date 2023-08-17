@@ -26,7 +26,7 @@
                         <li>@Html.ActionLink("Category Manage", "AddCategory", "Admin")</li>
                         <li>@Html.ActionLink("Product Manage", "AddProduct", "Admin")</li>
                     }
-                    @if (Session["User"] != null)
+                    @if (Session["UserId"] != null)
                     {
                         <li>@Html.ActionLink("Product", "Index", "Product")</li>
                         <li>@Html.ActionLink("Order History", "OrderHistory", "Order")</li>
