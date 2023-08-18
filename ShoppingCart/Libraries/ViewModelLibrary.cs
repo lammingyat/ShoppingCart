@@ -197,6 +197,7 @@ namespace ShoppingCart.Libraries
                     ).ToList().FirstOrDefault();
         }
 
+        //the view of order
         public IEnumerable<OrderViewModel> GetOrderListByUserId(int intUserId)
         {
             return (from objOrd in objShoppingCartDBEntities.Orders
@@ -213,9 +214,38 @@ namespace ShoppingCart.Libraries
                         PaidDate = (!string.IsNullOrEmpty(objOrd.PaidDate.ToString())) ? objOrd.PaidDate.ToString() : "-",
                         Valid = objOrd.Valid,
                         InvalidDate = (!string.IsNullOrEmpty(objOrd.InvalidDate.ToString())) ? objOrd.InvalidDate.ToString() : "-",
+                        Address = objOrd.Address,
+                        City = objOrd.City,
+                        Province = objOrd.Province,
+                        PostalCode = objOrd.PostalCode,
                         FullAddress = objOrd.Paid ? objOrd.Address + "," + objOrd.City + "," + objOrd.Province + "," + objOrd.PostalCode : String.Empty
                     }
              ).ToList();
+        }
+
+        public OrderViewModel GetLastPaidOrderByUserId(int intUserId)
+        {
+            return (from objOrd in objShoppingCartDBEntities.Orders
+                           where objOrd.UserId == intUserId && objOrd.Paid
+                    orderby objOrd.OrderDate descending
+                           select new OrderViewModel()
+                           {
+                               OrderId = objOrd.OrderId,
+                               OrderDate = objOrd.OrderDate,
+                               OrderNumber = objOrd.OrderNumber,
+                               UserID = objOrd.UserId,
+                               Total = objOrd.Total,
+                               Paid = objOrd.Paid,
+                               PaidDate = (!string.IsNullOrEmpty(objOrd.PaidDate.ToString())) ? objOrd.PaidDate.ToString() : "-",
+                               Valid = objOrd.Valid,
+                               InvalidDate = (!string.IsNullOrEmpty(objOrd.InvalidDate.ToString())) ? objOrd.InvalidDate.ToString() : "-",
+                               Address = objOrd.Address,
+                               City = objOrd.City,
+                               Province = objOrd.Province,
+                               PostalCode = objOrd.PostalCode,
+                               FullAddress = objOrd.Paid ? objOrd.Address + "," + objOrd.City + "," + objOrd.Province + "," + objOrd.PostalCode : String.Empty
+                           }
+             ).ToList().FirstOrDefault();
         }
 
         public OrderViewModel GetOrderByOrderId(int intOrderId)
@@ -237,6 +267,8 @@ namespace ShoppingCart.Libraries
                     }
                ).ToList().FirstOrDefault();
         }
+
+
 
         public IEnumerable<OrderDetailsViewsModel> GetOrderDetailByOrderId(int intOrderId)
         {

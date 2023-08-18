@@ -1,4 +1,4 @@
-﻿@model ShoppingCart.ViewModels.OrderViewModel
+﻿@model Tuple<ShoppingCart.ViewModels.OrderViewModel, ShoppingCart.ViewModels.OrderViewModel>
 @{
     ViewBag.Title = "Check Out";
 }
@@ -63,25 +63,25 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         Order Id :
-                        @Model.OrderId
+                        @Model.Item1.OrderId
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Order Date :
-                        @Model.OrderDate
+                        @Model.Item1.OrderDate
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Order Number :
-                        @Model.OrderNumber
+                        @Model.Item1.OrderNumber
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Total :$
-                        @Model.Total.ToString("#,##0.00")
+                        @Model.Item1.Total.ToString("#,##0.00")
                     </div>
                 </div>
             </td>
@@ -94,25 +94,25 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         Address :
-                        @Html.TextBoxFor(model => model.Address, new { @class = "form-control", autocomplete = "Off", @id = "Address" })
+                        @Html.TextBoxFor(model => model.Item2.Address, new { @class = "form-control", autocomplete = "Off", @id = "Address" })
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         City :
-                        @Html.TextBoxFor(model => model.City, new { @class = "form-control", autocomplete = "Off", @id = "City" })
+                        @Html.TextBoxFor(model => model.Item2.City, new { @class = "form-control", autocomplete = "Off", @id = "City" })
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Province :
-                        @Html.TextBoxFor(model => model.Province, new { @class = "form-control", autocomplete = "Off", @id = "Province" })
+                        @Html.TextBoxFor(model => model.Item2.Province, new { @class = "form-control", autocomplete = "Off", @id = "Province" })
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         PostalCode :
-                        @Html.TextBoxFor(model => model.PostalCode, new { @class = "form-control", autocomplete = "Off", @id = "PostalCode", maxlength = 6 })
+                        @Html.TextBoxFor(model => model.Item2.PostalCode, new { @class = "form-control", autocomplete = "Off", @id = "PostalCode", maxlength = 6 })
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -124,26 +124,26 @@
         </tr>
         <tr>
             <td style="border-style:solid">
-                <h4>Card:</h4>
+                <h4>Card Detail:</h4>
                 <div class="col-md-4">
                     <div class="form-group">
                         Card No :
-                        @Html.TextBoxFor(model => model.CardNo, new { @class = "form-control", autocomplete = "Off", @id = "CardNo", maxlength = 16 })
-                        @Html.ValidationMessageFor(model => model.CardNo, "The Card No must be 16 digits", new { @class = "text-danger" })
+                        @Html.TextBoxFor(model => model.Item1.CardNo, new { @class = "form-control", autocomplete = "Off", @id = "CardNo", maxlength = 16 })
+                        @Html.ValidationMessageFor(model => model.Item1.CardNo, "The Card No must be 16 digits", new { @class = "text-danger" })
 
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         Card Holder :
-                        @Html.TextBoxFor(model => model.CardHolder, new { @class = "form-control", autocomplete = "Off", @id = "CardHolder" })
+                        @Html.TextBoxFor(model => model.Item1.CardHolder, new { @class = "form-control", autocomplete = "Off", @id = "CardHolder" })
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         CVV :
-                        @Html.TextBoxFor(model => model.CVV, new { @class = "form-control", autocomplete = "Off", @id = "CVV", maxlength = 3 })
-                        @Html.ValidationMessageFor(model => model.CVV, "The CVV must be 3 digits", new { @class = "text-danger" })
+                        @Html.TextBoxFor(model => model.Item1.CVV, new { @class = "form-control", autocomplete = "Off", @id = "CVV", maxlength = 3 })
+                        @Html.ValidationMessageFor(model => model.Item1.CVV, "The CVV must be 3 digits", new { @class = "text-danger" })
 
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <input type="button" value="Reset" class="btn btn-danger" onclick="ResetCard();" />
-                        <input type="button" value="Pay" class="btn btn-primary" OrderId="@Model.OrderId.ToString()" onclick="Pay(this);" />
+                        <input type="button" value="Pay" class="btn btn-primary" OrderId="@Model.Item1.OrderId.ToString()" onclick="Pay(this);" />
                     </div>
                 </div>
             </td>

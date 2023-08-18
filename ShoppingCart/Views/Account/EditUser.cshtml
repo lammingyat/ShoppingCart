@@ -65,7 +65,7 @@
     <div class="col-md-4">
         <div class="form-group">
             Password :
-            @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", placeholder = "Password", @type = "password" })
+            @Html.TextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "Off", @id = "Password", @placeholder = "Password", @type = "password" })
             @Html.ValidationMessageFor(model => model.Password, "Password can't empty", new { @class = "text-danger" })
         </div>
     </div>

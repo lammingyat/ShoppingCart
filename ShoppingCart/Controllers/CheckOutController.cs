@@ -21,11 +21,17 @@ namespace ShoppingCart.Controllers
             {
                 int intOrderId;
                 if (Request["oid"] != null && int.TryParse(Request["oid"].ToString(), out intOrderId))
-                {
-                    //prevent another user access
+                {  
+                    //view of current order
                     OrderViewModel objOrderViewModel = vml.GetOrderByOrderId(intOrderId);
+
+                    //prevent another user access
                     if (objOrderViewModel != null && objOrderViewModel.UserID.ToString().Equals(Session["UserId"].ToString()))
-                        return View(objOrderViewModel);
+                    {
+                        //view of last paid order of the same user to get the address
+                        OrderViewModel objLastOrderViewModel = vml.GetLastPaidOrderByUserId(int.Parse(Session["UserId"].ToString()));
+                        return View(Tuple.Create(objOrderViewModel, objLastOrderViewModel));
+                    }
                     else return RedirectToAction("OrderHistory", "Order");
                 }
                 else return RedirectToAction("OrderHistory", "Order");
