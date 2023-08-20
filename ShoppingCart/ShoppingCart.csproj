@@ -193,6 +193,7 @@
       <DependentUpon>ShoppingCartDBModel.edmx</DependentUpon>
       <LastGenOutput>ShoppingCartDBModel.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\ShoppingCartDBModel.edmx.sql" />
     <Content Include="Models\ShoppingCartDBModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ShoppingCartDBModel.edmx</DependentUpon>
