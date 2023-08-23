@@ -127,7 +127,7 @@ namespace ShoppingCart.Libraries
                                             join
                                                 objCate in objShoppingCartDBEntities.Categories
                                                 on objProduct.CategoryId equals objCate.CategoryId
-                                            where objProduct.CategoryId == intCid
+                                            where (String.IsNullOrEmpty(strCid) || objProduct.CategoryId == intCid) && (!blnOnlyValid || objProduct.Valid == true)
                                             select new ShoppingViewModel()
                                             {
                                                 ImagePath = String.IsNullOrEmpty(objProduct.ImagePath) ? "~/Images/NoImage.jpg" : objProduct.ImagePath,
